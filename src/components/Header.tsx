@@ -14,6 +14,7 @@ export default function Header() {
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/projects', label: 'Projects' },
     { href: '/versions', label: 'Versions' },
+    { href: '/actions', label: 'Actions' },
   ]
 
   return (
