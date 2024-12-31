@@ -51,7 +51,7 @@ export const DrupalUpgradeStatusCustomCell = ({
   let parsedVersion
   try {
     parsedVersion = JSON.parse(version)
-  } catch (error) {
+  } catch {
     parsedVersion = null
   }
 
