@@ -17,7 +17,7 @@ export const formatDate = (dateString: string): string => {
     }
 
     return distance
-  } catch (error) {
+  } catch {
     return dateString
   }
 }
