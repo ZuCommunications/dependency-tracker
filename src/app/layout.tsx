@@ -1,7 +1,7 @@
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GeistSans } from 'geist/font/sans'
-import PlausibleProvider from 'next-plausible'
+import UmamiProvider from 'next-umami'
 import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 
@@ -27,10 +27,9 @@ export default function RootLayout({
       style={{ colorScheme: 'dark' }}
     >
       <head>
-        <PlausibleProvider
-          domain="dependency-tracker.netlify.app"
-          customDomain="https://plausible.zu.ca"
-          selfHosted={true}
+        <UmamiProvider
+          websiteId="6be235d7-4857-47f6-abfd-af753353d33a"
+          src="https://umami.zu.ca/script.js"
         />
       </head>
       <body className="overscroll-y-none bg-background text-foreground">
