@@ -9,6 +9,28 @@ const octokit = new Octokit({
 
 const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER!
 
+// Environment mapping configuration
+const ENV_MAPPING = {
+  development: ['dev', 'local', 'development'] as const,
+  staging: ['beta', 'uat', 'staging', 'testing', 'test'] as const,
+  production: ['prod', 'production', 'live'] as const,
+} as const
+
+type EnvType = typeof ENV_MAPPING
+type DevEnv = EnvType['development'][number]
+type StagingEnv = EnvType['staging'][number]
+type ProdEnv = EnvType['production'][number]
+type ValidEnv = DevEnv | StagingEnv | ProdEnv
+
+// Helper to normalize environment names
+function normalizeEnvironment(env: string): 'dev' | 'beta' | 'prod' | null {
+  const envLower = env.toLowerCase() as ValidEnv
+  if (ENV_MAPPING.development.includes(envLower as DevEnv)) return 'dev'
+  if (ENV_MAPPING.staging.includes(envLower as StagingEnv)) return 'beta'
+  if (ENV_MAPPING.production.includes(envLower as ProdEnv)) return 'prod'
+  return null
+}
+
 export async function fetchRepos() {
   const response = await octokit.repos.listForOrg({
     org: owner,
@@ -47,14 +69,27 @@ export async function fetchActionsData(options: ActionOptions) {
 
 export async function fetchDeploymentStatus(repoName: string) {
   try {
-    // Fetch the latest 30 deployments to cover all environments
-    const response = await octokit.repos.listDeployments({
-      owner,
-      repo: repoName,
-      per_page: 30,
-    })
+    // Fetch deployments for all possible environments
+    const allEnvs = Object.values(ENV_MAPPING).flat()
+    const deploymentsPromises = allEnvs.map((env) =>
+      octokit.repos.listDeployments({
+        owner,
+        repo: repoName,
+        environment: env,
+        per_page: 5,
+      }),
+    )
+    const deploymentResponses = await Promise.all(deploymentsPromises)
+    const allDeployments = deploymentResponses.flatMap(
+      (response) => response.data,
+    )
 
-    // Fetch releases for the repository
+    // Early return if no deployments
+    if (allDeployments.length === 0) {
+      return { dev: null, beta: null, prod: null }
+    }
+
+    // Fetch releases in parallel with deployments
     const releasesResponse = await octokit.repos.listReleases({
       owner,
       repo: repoName,
@@ -62,87 +97,99 @@ export async function fetchDeploymentStatus(repoName: string) {
     })
     const releases = releasesResponse.data
 
-    // Get statuses for each deployment
-    const deploymentStatuses = await Promise.all(
-      response.data.map(async (deployment) => {
-        const statusResponse = await octokit.repos.listDeploymentStatuses({
-          owner,
-          repo: repoName,
-          deployment_id: deployment.id,
-        })
-
-        // Only return if the latest status is success
-        if (statusResponse.data[0]?.state === 'success') {
-          // Fetch the deployment commit to get its parents
-          const commitResponse = await octokit.repos.getCommit({
-            owner,
-            repo: repoName,
-            ref: deployment.sha,
-          })
-
-          // Find matching release by checking commit and its parents
-          let matchingRelease = null
-          const commitShas = [
-            deployment.sha,
-            ...commitResponse.data.parents.map((p) => p.sha),
-          ]
-
-          for (const release of releases) {
-            if (commitShas.includes(release.target_commitish)) {
-              matchingRelease = {
-                name: release.name,
-                tag: release.tag_name,
-                url: release.html_url,
-              }
-              break
-            }
-          }
-
-          return {
-            environment: deployment.environment,
-            status: 'success',
-            created_at: deployment.created_at,
-            url: statusResponse.data[0]?.target_url,
-            ref: deployment.ref,
-            sha: deployment.sha.substring(0, 7),
-            commitUrl: `https://github.com/${owner}/${repoName}/commit/${deployment.sha}`,
-            refUrl: `https://github.com/${owner}/${repoName}/tree/${deployment.ref}`,
-            actor: deployment.creator
-              ? {
-                  login: deployment.creator.login,
-                  avatar_url: deployment.creator.avatar_url,
-                  html_url: deployment.creator.html_url,
-                }
-              : null,
-            release: matchingRelease,
-          }
-        }
-        return null
+    // Fetch all deployment statuses in parallel
+    const statusesPromises = allDeployments.map((deployment) =>
+      octokit.repos.listDeploymentStatuses({
+        owner,
+        repo: repoName,
+        deployment_id: deployment.id,
+        per_page: 1,
       }),
     )
+    const statusesResponses = await Promise.all(statusesPromises)
 
-    // Filter out null values and get latest successful deployment for each environment
-    const latestDeployments = new Map()
-    deploymentStatuses
-      .filter(
-        (deployment): deployment is NonNullable<typeof deployment> =>
-          deployment !== null,
-      )
-      .forEach((deployment) => {
-        // Normalize environment names
-        let envKey = deployment.environment.toLowerCase()
-        if (['uat', 'staging'].includes(envKey)) {
-          envKey = 'beta'
-        }
+    // Filter to only successful deployments and prepare commit fetching
+    const successfulDeployments = allDeployments.filter(
+      (deployment, index) =>
+        statusesResponses[index].data[0]?.state === 'success',
+    )
 
-        const current = latestDeployments.get(envKey)
-        if (
-          !current ||
-          new Date(deployment.created_at) > new Date(current.created_at)
-        ) {
-          latestDeployments.set(envKey, deployment)
+    // Fetch all required commits in a single batch
+    const uniqueCommits = [...new Set(successfulDeployments.map((d) => d.sha))]
+    const commitsPromises = uniqueCommits.map((sha) =>
+      octokit.repos.getCommit({
+        owner,
+        repo: repoName,
+        ref: sha,
+      }),
+    )
+    const commitsResponses = await Promise.all(commitsPromises)
+
+    // Create a map of commit data for quick lookup
+    const commitDataMap = new Map(
+      commitsResponses.map((response, index) => [
+        uniqueCommits[index],
+        {
+          sha: uniqueCommits[index],
+          parents: response.data.parents.map((p) => p.sha),
+        },
+      ]),
+    )
+
+    // Process deployments with all data available
+    const processedDeployments = successfulDeployments
+      .map((deployment, index) => {
+        const status = statusesResponses[index].data[0]
+        const commitData = commitDataMap.get(deployment.sha)
+        const normalizedEnv = normalizeEnvironment(deployment.environment)
+
+        if (!status || !commitData || !normalizedEnv) return null
+
+        // Find matching release
+        const commitShas = [deployment.sha, ...commitData.parents]
+        const matchingRelease = releases.find((release) =>
+          commitShas.includes(release.target_commitish),
+        )
+
+        return {
+          environment: normalizedEnv,
+          originalEnvironment: deployment.environment,
+          status: 'success',
+          created_at: deployment.created_at,
+          url: status.target_url,
+          ref: deployment.ref,
+          sha: deployment.sha.substring(0, 7),
+          commitUrl: `https://github.com/${owner}/${repoName}/commit/${deployment.sha}`,
+          refUrl: `https://github.com/${owner}/${repoName}/tree/${deployment.ref}`,
+          actor: deployment.creator
+            ? {
+                login: deployment.creator.login,
+                avatar_url: deployment.creator.avatar_url,
+                html_url: deployment.creator.html_url,
+              }
+            : null,
+          release: matchingRelease
+            ? {
+                name: matchingRelease.name,
+                tag: matchingRelease.tag_name,
+                url: matchingRelease.html_url,
+              }
+            : null,
         }
       })
+      .filter((d): d is NonNullable<typeof d> => d !== null)
+
+    // Group by environment and get latest for each
+    const latestDeployments = new Map()
+    processedDeployments.forEach((deployment) => {
+      const current = latestDeployments.get(deployment.environment)
+      if (
+        !current ||
+        new Date(deployment.created_at) > new Date(current.created_at)
+      ) {
+        latestDeployments.set(deployment.environment, deployment)
+      }
+    })
 
     return {
       dev: latestDeployments.get('dev') || null,
