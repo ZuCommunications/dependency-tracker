@@ -47,7 +47,7 @@ export default function EolDependenciesTable({
   const [eolDependencies, setEolDependencies] = useState<EolDependency[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedEnvironment, setSelectedEnvironment] = useQueryState('env', {
-    defaultValue: 'PROD',
+    defaultValue: 'all',
   })
   const [showLocal, setShowLocal] = useQueryState(
     'local',
@@ -103,13 +103,16 @@ export default function EolDependenciesTable({
   }, [eolDependencies])
 
   const filteredEolDependencies = useMemo(() => {
-    return selectedEnvironment === 'all'
-      ? sortedEolDependencies
-      : sortedEolDependencies.filter(
-          (dep) =>
-            dep.environment === selectedEnvironment ||
-            (showLocal && dep.environment === 'LOCAL'),
-        )
+    if (selectedEnvironment === 'all') {
+      return sortedEolDependencies.filter(
+        (dep) => dep.environment !== 'LOCAL' || showLocal,
+      )
+    }
+    return sortedEolDependencies.filter(
+      (dep) =>
+        dep.environment === selectedEnvironment ||
+        (showLocal && dep.environment === 'LOCAL'),
+    )
   }, [sortedEolDependencies, selectedEnvironment, showLocal])
 
   if (isLoading) {
@@ -135,12 +138,10 @@ export default function EolDependenciesTable({
         </h1>
       </div>
       <div className="mb-4 flex items-center justify-end gap-4">
-        {selectedEnvironment !== 'all' && selectedEnvironment !== 'LOCAL' && (
-          <div className="flex h-9 min-w-fit items-center gap-2 rounded-md border px-3 py-2 text-sm">
-            Show Local
-            <Switch checked={showLocal} onCheckedChange={setShowLocal} />
-          </div>
-        )}
+        <div className="flex h-9 min-w-fit items-center gap-2 rounded-md border px-3 py-2 text-sm">
+          Show Local
+          <Switch checked={showLocal} onCheckedChange={setShowLocal} />
+        </div>
         <Select
           value={selectedEnvironment}
           onValueChange={(value) => setSelectedEnvironment(value)}

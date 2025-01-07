@@ -64,12 +64,12 @@ export function DeploymentCell({
                   href={deployment.refUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="max-w-[140px] truncate text-xs text-muted-foreground hover:text-foreground"
+                  className="group max-w-[140px] truncate text-xs text-muted-foreground transition-colors hover:text-foreground"
                   aria-label={`Branch: ${branchName}`}
                 >
                   <span className="inline-flex items-center gap-1">
                     <GitBranch
-                      className="h-3 w-3 shrink-0"
+                      className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
                       aria-hidden="true"
                     />
                     <span className="truncate">{branchName}</span>
@@ -96,9 +96,12 @@ export function DeploymentCell({
                       href={deployment.release.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                      className="group inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      <Tag className="h-3 w-3 shrink-0" aria-hidden="true" />
+                      <Tag
+                        className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
+                        aria-hidden="true"
+                      />
                       <span className="font-medium">
                         {deployment.release.tag}
                       </span>
@@ -122,10 +125,13 @@ export function DeploymentCell({
                 href={deployment.commitUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 hover:text-foreground"
+                className="group inline-flex items-center gap-1 transition-colors hover:text-foreground"
                 aria-label={`Commit: ${deployment.sha}`}
               >
-                <GitCommit className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <GitCommit
+                  className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
+                  aria-hidden="true"
+                />
                 <span className="font-mono">{deployment.sha}</span>
               </Link>
             </TooltipTrigger>
@@ -142,7 +148,7 @@ export function DeploymentCell({
               href={deployment.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-foreground"
+              className="transition-colors hover:text-foreground"
               aria-label={`Deployed ${timeAgo}`}
             >
               {timeAgo}
@@ -160,13 +166,17 @@ export function DeploymentCell({
                     href={deployment.actor.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center hover:text-foreground"
+                    className="inline-flex items-center transition-colors hover:text-foreground"
                   >
                     <img
                       src={deployment.actor.avatar_url}
-                      alt={deployment.actor.login}
+                      alt=""
                       className="h-4 w-4 rounded-full"
+                      aria-hidden="true"
                     />
+                    <span className="sr-only">
+                      Deployed by {deployment.actor.login}
+                    </span>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent side="top">
