@@ -18,13 +18,32 @@ export const Cell = ({ tech, version }: { tech: string; version: string }) => {
   }
 }
 
-export const Drupal11ReadinessCell = ({ version }: { version: any }) => {
+interface Drupal11ReadinessItem {
+  class?: string | string[]
+  message?: string
+}
+
+export const Drupal11ReadinessCell = ({
+  version,
+}: {
+  version: string | null
+}) => {
   if (!version) return <>-</>
 
-  const parsedVersion = JSON.parse(version)
+  let parsedVersion: Drupal11ReadinessItem[]
+  try {
+    parsedVersion = JSON.parse(version)
+    if (!Array.isArray(parsedVersion)) {
+      console.error('Expected array for Drupal11Readiness data')
+      return <Badge variant="outline">Error</Badge>
+    }
+  } catch (error) {
+    console.error('Error parsing Drupal11Readiness data:', error)
+    return <Badge variant="outline">Error</Badge>
+  }
 
   const isError = parsedVersion.some(
-    (item: any) =>
+    (item) =>
       item.class &&
       ((typeof item.class === 'string' && item.class === 'color-error') ||
         (Array.isArray(item.class) && item.class.includes('color-error'))),
@@ -41,28 +60,37 @@ export const Drupal11ReadinessCell = ({ version }: { version: any }) => {
   )
 }
 
+interface DrupalUpgradeStatusItem {
+  severity?: string
+  message?: string
+}
+
 export const DrupalUpgradeStatusCustomCell = ({
   version,
 }: {
-  version: any
+  version: string | null
 }) => {
   if (!version) return <>-</>
 
-  let parsedVersion
+  let parsedVersion: DrupalUpgradeStatusItem[] | null = null
   try {
-    parsedVersion = JSON.parse(version)
-  } catch {
-    parsedVersion = null
+    const parsed = JSON.parse(version)
+    if (Array.isArray(parsed)) {
+      parsedVersion = parsed
+    } else {
+      console.error('Expected array for DrupalUpgradeStatus data')
+    }
+  } catch (error) {
+    console.error('Error parsing DrupalUpgradeStatus data:', error)
   }
 
   if (parsedVersion === null) {
     return <Badge variant="outline">N/A</Badge>
   }
 
-  const isError =
-    parsedVersion?.some(
-      (item: any) => item.severity && item.severity !== 'info',
-    ) ?? false
+  const isError = parsedVersion.some(
+    (item) => item.severity && item.severity !== 'info',
+  )
 
   return (
     <D11UpgradeCustomTooltip data={parsedVersion}>
