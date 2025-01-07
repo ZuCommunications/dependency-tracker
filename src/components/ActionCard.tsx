@@ -20,11 +20,11 @@ const ActionCard = ({
   },
 }: Props) => {
   return (
-    <Card>
+    <Card className="flex h-full flex-col">
       <CardHeader>
         <h1 className="text-xl font-medium">{title}</h1>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="flex flex-grow flex-col gap-2">
         <p>
           <GitBranch className="inline" /> {head_branch}
         </p>
@@ -57,7 +57,7 @@ const ActionCard = ({
           {actor?.login}
         </a>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <a href={link} target="_blank" className="w-full">
           <Button className="w-full">View Run</Button>
         </a>
