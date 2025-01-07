@@ -7,7 +7,6 @@ import {
 import { formatDistanceToNow } from 'date-fns'
 import { GitBranch, GitCommit, Tag } from 'lucide-react'
 import Link from 'next/link'
-import { useMemo } from 'react'
 
 export interface DeploymentStatus {
   environment: string
@@ -43,22 +42,12 @@ export function DeploymentCell({
     )
   }
 
-  const timeAgo = useMemo(() => {
-    try {
-      return formatDistanceToNow(new Date(deployment.created_at), {
-        addSuffix: true,
-      })
-    } catch (error) {
-      console.error('Invalid date:', deployment.created_at)
-      return 'Invalid date'
-    }
-  }, [deployment.created_at])
+  const timeAgo = formatDistanceToNow(new Date(deployment.created_at), {
+    addSuffix: true,
+  })
 
   // Extract branch name from ref (removes refs/heads/ or refs/tags/)
-  const branchName = useMemo(
-    () => deployment.ref.split('/').pop() || deployment.ref,
-    [deployment.ref],
-  )
+  const branchName = deployment.ref.split('/').pop() || deployment.ref
 
   return (
     <div
