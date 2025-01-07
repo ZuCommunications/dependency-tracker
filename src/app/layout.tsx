@@ -1,5 +1,4 @@
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
-import ThemeProvider from '@/providers/ThemeProvider'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GeistSans } from 'geist/font/sans'
 import PlausibleProvider from 'next-plausible'
@@ -24,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={GeistSans.className}
+      className={`${GeistSans.className} dark`}
       style={{ colorScheme: 'dark' }}
     >
       <head>
@@ -36,19 +35,12 @@ export default function RootLayout({
       </head>
       <body className="overscroll-y-none bg-background text-foreground">
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ReactQueryProvider>
-            <main className="flex min-h-screen flex-col items-center">
-              {children}
-            </main>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </ReactQueryProvider>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <main className="flex min-h-screen flex-col items-center">
+            {children}
+          </main>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ReactQueryProvider>
       </body>
     </html>
   )
