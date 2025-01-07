@@ -1,6 +1,8 @@
 import CardWithLink from '@/components/card-with-link'
 import { ProjectToolsTable } from '@/components/project-tools-table'
+import { TableSkeleton } from '@/components/table-list-skeleton'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Dependency } from '@/constants/types'
 import {
   fetchDependabotAlertsData,
@@ -10,29 +12,90 @@ import { createServerClient } from '@/utils/supabase'
 import { ArrowLeft } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
+import { Suspense } from 'react'
+
+function CardsSkeleton() {
+  return (
+    <div className="flex gap-2">
+      <Skeleton className="h-[120px] w-1/2 rounded-lg" />
+      <Skeleton className="h-[120px] w-1/2 rounded-lg" />
+    </div>
+  )
+}
+
+function ToolsTableSkeleton() {
+  return (
+    <TableSkeleton
+      headers={[
+        'Tool',
+        'LOCAL',
+        'DEV',
+        'BETA',
+        'PROD',
+        'Latest Version',
+        'EOL',
+      ]}
+      rowCount={16}
+    />
+  )
+}
+
+async function DependabotSection({ projectId }: { projectId: string }) {
+  const alerts = await fetchDependabotAlertsData(projectId)
+  const count = alerts.filter((alert) => alert.state === 'open').length
+
+  return (
+    <div className="flex gap-2">
+      <CardWithLink
+        title="Open Dependabot Security Issues"
+        content={count.toString()}
+        link={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${projectId}/security/dependabot`}
+        isExternalLink={true}
+        className="md:w-1/2"
+        contentClassName={count ? 'text-destructive' : ''}
+      />
+      <CardWithLink
+        title="Full List of Dependencies"
+        content={projectId}
+        link={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${projectId}/network/dependencies`}
+        isExternalLink={true}
+        className="md:w-1/2"
+        contentClassName="text-card"
+      />
+    </div>
+  )
+}
+
+async function DeploymentSection({
+  projectId,
+  dependencies,
+}: {
+  projectId: string
+  dependencies: Dependency[]
+}) {
+  const deployments = await fetchDeploymentStatus(projectId)
+
+  return <ProjectToolsTable data={dependencies} deployments={deployments} />
+}
 
 export default async function ToolsPage(props: {
   params: Promise<{ projectId: string }>
 }) {
   const params = await props.params
-
   const { projectId } = params
 
   const cookieStore = await cookies()
   const supabase = createServerClient(cookieStore)
 
-  const [{ data, error }, deployments] = await Promise.all([
-    supabase.from('versions').select('*').eq('id', projectId),
-    fetchDeploymentStatus(projectId),
-  ])
+  const { data, error } = await supabase
+    .from('versions')
+    .select('*')
+    .eq('id', projectId)
 
   if (error) {
     return <div>Error: {error.message}</div>
   }
   const dependencies: Dependency[] = data || []
-
-  const alerts = await fetchDependabotAlertsData(projectId)
-  const count = alerts.filter((alert) => alert.state === 'open').length
 
   return (
     <div className="container mx-auto p-6">
@@ -47,25 +110,19 @@ export default async function ToolsPage(props: {
         </div>
         <h2 className="text-center text-2xl font-bold">{projectId}</h2>
       </div>
-      <div className="flex gap-2">
-        <CardWithLink
-          title="Open Dependabot Security Issues"
-          content={count.toString()}
-          link={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${projectId}/security/dependabot`}
-          isExternalLink={true}
-          className="md:w-1/2"
-          contentClassName={count ? 'text-destructive' : ''}
-        />
-        <CardWithLink
-          title="Full List of Dependencies"
-          content={projectId}
-          link={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${projectId}/network/dependencies`}
-          isExternalLink={true}
-          className="md:w-1/2"
-          contentClassName="text-card"
-        />
+
+      <Suspense fallback={<CardsSkeleton />}>
+        <DependabotSection projectId={projectId} />
+      </Suspense>
+
+      <div className="mt-6">
+        <Suspense fallback={<ToolsTableSkeleton />}>
+          <DeploymentSection
+            projectId={projectId}
+            dependencies={dependencies}
+          />
+        </Suspense>
       </div>
-      <ProjectToolsTable data={dependencies} deployments={deployments} />
     </div>
   )
 }
