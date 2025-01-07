@@ -7,7 +7,7 @@ import {
   fetchDeploymentStatus,
 } from '@/server-actions/github'
 import { createServerClient } from '@/utils/supabase'
-import { ArrowLeft, List } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 
@@ -46,14 +46,6 @@ export default async function ToolsPage(props: {
           </Link>
         </div>
         <h2 className="text-center text-2xl font-bold">{projectId}</h2>
-        <div className="absolute right-0 top-1/2 -translate-y-1/2">
-          <Link prefetch={true} href={`/projects/${projectId}/simple-tools`}>
-            <Button variant="outline" size="sm">
-              <List className="mr-2 h-4 w-4" />
-              Simple View
-            </Button>
-          </Link>
-        </div>
       </div>
       <div className="flex gap-2">
         <CardWithLink
