@@ -58,3 +58,7 @@ Create your DB matching the above example.
 - `npm run format-check` — Runs Prettier and checks if any files have formatting issues.
 - `npm run format` — Runs Prettier and formats files.
 - `npm run prepush` — Runs all checks.
+
+### Links
+
+- Supabase Doc to generate types - [link](https://supabase.com/docs/guides/api/rest/generating-types)
