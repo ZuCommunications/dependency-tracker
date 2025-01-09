@@ -1,7 +1,6 @@
 import { createServerClient } from '@/utils/supabase'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { Dependency } from '@/constants/types'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { ProjectVersionsTable } from '@/components/project-versions-table'
@@ -24,7 +23,7 @@ export default async function VersionsPage(props: {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const dependencies: Dependency[] = data || []
+  const dependencies = data || []
 
   return (
     <div className="container mx-auto p-6">

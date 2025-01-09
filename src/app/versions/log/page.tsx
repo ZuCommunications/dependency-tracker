@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Dependency } from '@/constants/types'
 import { formatDate } from '@/utils/utility-functions'
 
 export default async function Log() {
@@ -25,7 +24,7 @@ export default async function Log() {
     return <div>Error: {error.message}</div>
   }
 
-  const dependencies: Dependency[] = data || []
+  const dependencies = data || []
   const tableHeaders = Object.keys(dependencies[0] || {})
 
   return (
@@ -51,8 +50,9 @@ export default async function Log() {
                   key={`${item.id}-${item.key}-${item.created_at}-${header}`}
                 >
                   {header === 'created_at' || header === 'modified_at'
-                    ? formatDate(item[header as keyof Dependency] as string)
-                    : (item[header as keyof Dependency] as string)}
+                    ? formatDate(item[header] as string)
+                    : // @ts-expect-error
+                      (item[header] as string)}
                 </TableCell>
               ))}
             </TableRow>

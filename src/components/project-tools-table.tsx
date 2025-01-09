@@ -10,15 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Dependency } from '@/constants/types'
 import { useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { DeploymentCell, DeploymentStatus } from './DeploymentCell'
 import { EndOfLifeCell } from './EndOfLifeCell'
 import { LatestVersionCell } from './LatestVersionCell'
+import { Tables } from '../../database.types'
 
 interface ProjectToolsTableProps {
-  data: Dependency[]
+  data: Tables<'versions'>[]
   deployments: {
     dev: DeploymentStatus | null
     beta: DeploymentStatus | null
@@ -40,6 +40,7 @@ export function ProjectToolsTable({
       if (!grouped[item.key]) {
         grouped[item.key] = {}
       }
+      // @ts-expect-error
       grouped[item.key][item.environment] = item.value
     })
     return grouped

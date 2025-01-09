@@ -1,8 +1,8 @@
-import { Dependency } from '@/constants/types'
 import { fetchAndParseICSEvents } from '@/lib/ics-utils'
 import { createServerClient } from '@/utils/supabase'
 import { cookies } from 'next/headers'
 import { CalendarView } from './CalendarView'
+import { Tables } from '../../../database.types'
 
 export const revalidate = 3600 // Revalidate every hour
 
@@ -35,37 +35,37 @@ async function fetchDependencies() {
     .in('key', VERSION_KEYS)
 
   if (error) throw error
-  return data as Dependency[]
+  return data
 }
 
 function getAffectedProjectsForDB(
-  dependencies: Dependency[],
+  dependencies: Tables<'versions'>[],
   tech: string,
   version: string,
 ) {
   return dependencies
     .filter((dep) => {
       if (dep.key !== 'DB_VERSION') return false
-      const isMariaDB = dep.value.toLowerCase().includes('mariadb')
+      const isMariaDB = dep?.value?.toLowerCase().includes('mariadb')
       return isMariaDB
-        ? tech.toLowerCase() === 'mariadb' && dep.value.startsWith(version)
-        : tech.toLowerCase() === 'mysql' && dep.value.startsWith(version)
+        ? tech.toLowerCase() === 'mariadb' && dep?.value?.startsWith(version)
+        : tech.toLowerCase() === 'mysql' && dep?.value?.startsWith(version)
     })
     .map((dep) => dep.id)
 }
 
 function getAffectedProjects(
-  dependencies: Dependency[],
+  dependencies: Tables<'versions'>[],
   tech: string,
   version: string,
 ) {
   const techKey = `${tech.toUpperCase()}_VERSION`
   return dependencies
-    .filter((dep) => dep.key === techKey && dep.value.startsWith(version))
+    .filter((dep) => dep.key === techKey && dep?.value?.startsWith(version))
     .map((dep) => dep.id)
 }
 
-function enhanceEvent(event: any, dependencies: Dependency[]) {
+function enhanceEvent(event: any, dependencies: Tables<'versions'>[]) {
   const summaryMatch = event.summary.match(/(\w+)\s+(\d+\.\d+)/)
   if (!summaryMatch) return { ...event, affectedProjects: [] }
 
