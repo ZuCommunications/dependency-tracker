@@ -3,7 +3,6 @@ import { ProjectToolsTable } from '@/components/project-tools-table'
 import { TableSkeleton } from '@/components/table-list-skeleton'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Dependency } from '@/constants/types'
 import {
   fetchDependabotAlertsData,
   fetchDeploymentStatus,
@@ -13,6 +12,7 @@ import { ArrowLeft } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { Tables } from '../../../../../database.types'
 
 function CardsSkeleton() {
   return (
@@ -71,7 +71,7 @@ async function DeploymentSection({
   dependencies,
 }: {
   projectId: string
-  dependencies: Dependency[]
+  dependencies: Tables<'versions'>[]
 }) {
   const deployments = await fetchDeploymentStatus(projectId)
 
@@ -95,7 +95,7 @@ export default async function ToolsPage(props: {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const dependencies: Dependency[] = data || []
+  const dependencies = data || []
 
   return (
     <div className="container mx-auto p-6">

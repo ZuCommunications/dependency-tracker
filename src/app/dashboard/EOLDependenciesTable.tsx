@@ -25,11 +25,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { Dependency } from '@/constants/types'
 import { fetchVersionData } from '@/hooks/useFetchVersionData'
 import { parseAsBoolean, useQueryState } from 'nuqs'
+import { Tables } from '../../../database.types'
 
-interface EolDependency extends Dependency {
+interface EolDependency extends Tables<'versions'> {
   eol: string
   eolDate: Date | null
 }
@@ -42,7 +42,7 @@ type VersionData = {
 export default function EolDependenciesTable({
   versions,
 }: {
-  versions: Dependency[]
+  versions: Tables<'versions'>[]
 }) {
   const [eolDependencies, setEolDependencies] = useState<EolDependency[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -61,7 +61,7 @@ export default function EolDependenciesTable({
           const dependency = dependencyBySearch[version.key.toLowerCase()]
           if (!dependency?.tech) return null
 
-          const cycle = extractCycle(version.value)
+          const cycle = extractCycle(version.value ?? '')
           if (!cycle) return null
 
           try {
@@ -178,7 +178,7 @@ export default function EolDependenciesTable({
               <TableCell className="flex gap-2">
                 {dep.value}
                 <CurrentVersionTooltip
-                  currentVersion={dep.value}
+                  currentVersion={dep.value ?? ''}
                   searchKey={dep.key}
                 />
               </TableCell>

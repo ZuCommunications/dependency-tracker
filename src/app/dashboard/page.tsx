@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dependency } from '@/constants/types'
 import { createServerClient } from '@/utils/supabase'
 import { ExternalLink } from 'lucide-react'
 import { cookies } from 'next/headers'
@@ -30,7 +29,7 @@ async function getDashboardData() {
   return {
     projectCount,
     uniqueToolsCount,
-    versions: (versions as Dependency[]) ?? [],
+    versions: versions ?? [],
   }
 }
 

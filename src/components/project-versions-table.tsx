@@ -1,5 +1,6 @@
 'use client'
 
+import { Cell } from '@/components/DataCells'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -9,16 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Dependency } from '@/constants/types'
 import Link from 'next/link'
 import { useQueryState } from 'nuqs'
 import { useMemo } from 'react'
-import { Cell } from '@/components/DataCells'
+import { Tables } from '../../database.types'
 import { EndOfLifeCell } from './EndOfLifeCell'
 import { LatestVersionCell } from './LatestVersionCell'
 
 interface ProjectVersionsTableProps {
-  data: Dependency[]
+  data: Tables<'versions'>[]
   tech: string
 }
 
@@ -36,6 +36,7 @@ export function ProjectVersionsTable({
       if (!grouped[item.id]) {
         grouped[item.id] = {}
       }
+      // @ts-expect-error
       grouped[item.id][item.environment] = item.value
     })
     return grouped
