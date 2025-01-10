@@ -11,6 +11,7 @@ export const dependency = [
   { name: 'Drupal Admin Theme', search: 'drupal_admin_theme' },
   { name: 'OS Version', search: 'os_version', tech: 'os' },
   { name: 'Lando', search: 'lando' },
+  { name: 'Node Version', search: 'node_version', tech: 'nodejs' },
   {
     name: 'Drupal 11 Readiness',
     search: 'drupal_11_readiness',
