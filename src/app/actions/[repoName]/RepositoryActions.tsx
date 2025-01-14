@@ -10,7 +10,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
 import { useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { bots, displayFlex, gitGud, IT } from './teamMembers'
 
 type Props = { repoName: string }
@@ -20,7 +20,9 @@ const RepositoryActions = ({ repoName }: Props) => {
     defaultValue: 'completed' as Filter,
   })
 
-  const [authorName, setAuthorName] = useState('Members')
+  const [authorName, setAuthorName] = useQueryState('author', {
+    defaultValue: 'Members',
+  })
 
   const { data, isLoading } = useFetchActionsData({
     repoName: repoName as string,
