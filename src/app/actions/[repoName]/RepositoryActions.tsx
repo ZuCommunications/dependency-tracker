@@ -28,10 +28,6 @@ const RepositoryActions = ({ repoName }: Props) => {
     filter: selectedFilter as Filter,
   })
 
-  if (data === undefined && !isLoading) {
-    return <>Something went wrong...</>
-  }
-
   const filteredRuns = useMemo(() => {
     return data?.workflow_runs.filter(
       (run) =>
@@ -40,6 +36,10 @@ const RepositoryActions = ({ repoName }: Props) => {
           authorName === ''),
     )
   }, [data, authorType, authorName])
+
+  if (data === undefined && !isLoading) {
+    return <>Something went wrong...</>
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -59,19 +59,25 @@ const RepositoryActions = ({ repoName }: Props) => {
               display: flex
             </SelectItem>
             {displayFlex.map((member) => (
-              <SelectItem value={member}>{member}</SelectItem>
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
             ))}
             <SelectItem value="GitGud" disabled>
               Git Gud
             </SelectItem>
             {gitGud.map((member) => (
-              <SelectItem value={member}>{member}</SelectItem>
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
             ))}
             <SelectItem value="IT" disabled>
               IT
             </SelectItem>
             {IT.map((member) => (
-              <SelectItem value={member}>{member}</SelectItem>
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -135,7 +141,8 @@ const RepositoryActions = ({ repoName }: Props) => {
                 </span>
               ) : (
                 <span>
-                  There are no '{selectedFilter}' actions by {authorName}
+                  There are no &lsquo;{selectedFilter}&rsquo; actions by{' '}
+                  {authorName}
                 </span>
               )}
             </div>
