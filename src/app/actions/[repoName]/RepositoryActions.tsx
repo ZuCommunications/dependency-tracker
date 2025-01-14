@@ -9,11 +9,55 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
+import Image from 'next/image'
 import { useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { bots, displayFlex, gitGud, IT } from './teamMembers'
 
 type Props = { repoName: string }
+
+interface MemberItemProps {
+  value: string
+  children: React.ReactNode
+  disabled?: boolean
+}
+
+const MemberItem = ({ value, children, disabled }: MemberItemProps) => {
+  // Skip avatar for section headers
+  if (disabled) {
+    return (
+      <SelectItem value={value} disabled={disabled}>
+        {children}
+      </SelectItem>
+    )
+  }
+
+  const getBotAvatarUrl = (botName: string) => {
+    switch (botName) {
+      case 'github-actions':
+        return 'https://avatars.githubusercontent.com/in/15368'
+      case 'dependabot[bot]':
+        return 'https://avatars.githubusercontent.com/in/29110'
+      default:
+        return `https://github.com/${value}.png`
+    }
+  }
+
+  return (
+    <SelectItem value={value}>
+      <div className="flex items-center gap-2">
+        <Image
+          src={getBotAvatarUrl(value)}
+          alt={`${value}'s avatar`}
+          width={20}
+          height={20}
+          className="rounded-full"
+        />
+        {children}
+      </div>
+    </SelectItem>
+  )
+}
 
 const RepositoryActions = ({ repoName }: Props) => {
   const [selectedFilter, setSelectedFilter] = useQueryState('filter', {
@@ -60,40 +104,38 @@ const RepositoryActions = ({ repoName }: Props) => {
             <SelectValue placeholder="Select Author" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem key={'All Members'} value="Members">
-              All Members
-            </SelectItem>
-            <SelectItem value="DisplayFlex" disabled>
+            <MemberItem value="Members">All Members</MemberItem>
+            <MemberItem value="DisplayFlex" disabled>
               display: flex
-            </SelectItem>
+            </MemberItem>
             {displayFlex.map((member) => (
-              <SelectItem key={member} value={member}>
+              <MemberItem key={member} value={member}>
                 {member}
-              </SelectItem>
+              </MemberItem>
             ))}
-            <SelectItem value="GitGud" disabled>
+            <MemberItem value="GitGud" disabled>
               Git Gud
-            </SelectItem>
+            </MemberItem>
             {gitGud.map((member) => (
-              <SelectItem key={member} value={member}>
+              <MemberItem key={member} value={member}>
                 {member}
-              </SelectItem>
+              </MemberItem>
             ))}
-            <SelectItem value="IT" disabled>
+            <MemberItem value="IT" disabled>
               IT
-            </SelectItem>
+            </MemberItem>
             {IT.map((member) => (
-              <SelectItem key={member} value={member}>
+              <MemberItem key={member} value={member}>
                 {member}
-              </SelectItem>
+              </MemberItem>
             ))}
-            <SelectItem value="Bots" disabled>
+            <MemberItem value="Bots" disabled>
               Bots
-            </SelectItem>
+            </MemberItem>
             {bots.map((member) => (
-              <SelectItem key={member} value={member}>
+              <MemberItem key={member} value={member}>
                 {member}
-              </SelectItem>
+              </MemberItem>
             ))}
           </SelectContent>
         </Select>
