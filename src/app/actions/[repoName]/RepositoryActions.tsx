@@ -1,7 +1,5 @@
 'use client'
 import ActionCard from '@/components/ActionCard'
-import { Skeleton } from '@/components/ui/skeleton'
-import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
 import {
   Select,
   SelectContent,
@@ -9,7 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
+import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
 import { useQueryState } from 'nuqs'
+import { useMemo, useState } from 'react'
+import { displayFlex, gitGud, IT } from './teamMembers'
 
 type Props = { repoName: string }
 
@@ -17,6 +19,9 @@ const RepositoryActions = ({ repoName }: Props) => {
   const [selectedFilter, setSelectedFilter] = useQueryState('filter', {
     defaultValue: 'completed' as Filter,
   })
+
+  const [authorType, setAuthorType] = useState('user')
+  const [authorName, setAuthorName] = useState('')
 
   const { data, isLoading } = useFetchActionsData({
     repoName: repoName as string,
@@ -27,6 +32,15 @@ const RepositoryActions = ({ repoName }: Props) => {
     return <>Something went wrong...</>
   }
 
+  const filteredRuns = useMemo(() => {
+    return data?.workflow_runs.filter(
+      (run) =>
+        authorType.toLowerCase() === run.actor?.type.toLowerCase() &&
+        (run.actor.login.toLowerCase() === authorName.toLowerCase() ||
+          authorName === ''),
+    )
+  }, [data, authorType, authorName])
+
   return (
     <div className="container mx-auto p-4">
       <div className="mb-4">
@@ -34,8 +48,47 @@ const RepositoryActions = ({ repoName }: Props) => {
       </div>
       <div className="mb-4 flex items-center justify-end gap-4">
         <Select
+          value={authorName}
+          onValueChange={(value) => setAuthorName(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Author" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="DisplayFlex" disabled>
+              display: flex
+            </SelectItem>
+            {displayFlex.map((member) => (
+              <SelectItem value={member}>{member}</SelectItem>
+            ))}
+            <SelectItem value="GitGud" disabled>
+              Git Gud
+            </SelectItem>
+            {gitGud.map((member) => (
+              <SelectItem value={member}>{member}</SelectItem>
+            ))}
+            <SelectItem value="IT" disabled>
+              IT
+            </SelectItem>
+            {IT.map((member) => (
+              <SelectItem value={member}>{member}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={authorType}
+          onValueChange={(value) => setAuthorType(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Author Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bot">Bot</SelectItem>
+            <SelectItem value="user">User</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
           value={selectedFilter}
-          // @ts-ignore
           onValueChange={(value) => setSelectedFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
@@ -73,10 +126,26 @@ const RepositoryActions = ({ repoName }: Props) => {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {data?.workflow_runs.map((action) => (
-            <ActionCard key={action.id} action={action} />
-          ))}
+        <div>
+          {filteredRuns?.length === 0 ? (
+            <div className="flex items-center justify-center gap-4 py-8 text-xl">
+              {authorName !== '' && authorType.toLowerCase() === 'bot' ? (
+                <span>
+                  {authorName} is not a {authorType}
+                </span>
+              ) : (
+                <span>
+                  There are no '{selectedFilter}' actions by {authorName}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {filteredRuns?.map((action) => (
+                <ActionCard key={action.id} action={action} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
