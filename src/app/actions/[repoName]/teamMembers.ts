@@ -19,3 +19,5 @@ export const gitGud: string[] = [
 ]
 
 export const IT: string[] = ['dcmbrown', 'grego-r-b']
+
+export const bots: string[] = ['github-actions', 'dependabot[bot]']
