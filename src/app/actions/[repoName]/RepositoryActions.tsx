@@ -20,7 +20,7 @@ const RepositoryActions = ({ repoName }: Props) => {
     defaultValue: 'completed' as Filter,
   })
 
-  const [authorName, setAuthorName] = useState('')
+  const [authorName, setAuthorName] = useState('Members')
 
   const { data, isLoading } = useFetchActionsData({
     repoName: repoName as string,
@@ -28,6 +28,11 @@ const RepositoryActions = ({ repoName }: Props) => {
   })
 
   const filteredRuns = useMemo(() => {
+    if (authorName === 'Members') {
+      return data?.workflow_runs.filter(
+        (run) => !bots.includes(run.actor?.login ?? ''),
+      )
+    }
     return data?.workflow_runs.filter(
       (run) =>
         run.actor?.login.toLowerCase() === authorName.toLowerCase() ||
@@ -53,6 +58,9 @@ const RepositoryActions = ({ repoName }: Props) => {
             <SelectValue placeholder="Select Author" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem key={'All Members'} value="Members">
+              All Members
+            </SelectItem>
             <SelectItem value="DisplayFlex" disabled>
               display: flex
             </SelectItem>
