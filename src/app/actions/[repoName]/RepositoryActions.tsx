@@ -1,7 +1,5 @@
 'use client'
 import ActionCard from '@/components/ActionCard'
-import { Skeleton } from '@/components/ui/skeleton'
-import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
 import {
   Select,
   SelectContent,
@@ -9,7 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
+import useFetchActionsData, { Filter } from '@/hooks/useFetchActionsData'
 import { useQueryState } from 'nuqs'
+import { useMemo, useState } from 'react'
+import { bots, displayFlex, gitGud, IT } from './teamMembers'
 
 type Props = { repoName: string }
 
@@ -18,10 +20,25 @@ const RepositoryActions = ({ repoName }: Props) => {
     defaultValue: 'completed' as Filter,
   })
 
+  const [authorName, setAuthorName] = useState('Members')
+
   const { data, isLoading } = useFetchActionsData({
     repoName: repoName as string,
     filter: selectedFilter as Filter,
   })
+
+  const filteredRuns = useMemo(() => {
+    if (authorName === 'Members') {
+      return data?.workflow_runs.filter(
+        (run) => !bots.includes(run.actor?.login ?? ''),
+      )
+    }
+    return data?.workflow_runs.filter(
+      (run) =>
+        run.actor?.login.toLowerCase() === authorName.toLowerCase() ||
+        authorName === '',
+    )
+  }, [data, authorName])
 
   if (data === undefined && !isLoading) {
     return <>Something went wrong...</>
@@ -34,8 +51,52 @@ const RepositoryActions = ({ repoName }: Props) => {
       </div>
       <div className="mb-4 flex items-center justify-end gap-4">
         <Select
+          value={authorName}
+          onValueChange={(value) => setAuthorName(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Author" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={'All Members'} value="Members">
+              All Members
+            </SelectItem>
+            <SelectItem value="DisplayFlex" disabled>
+              display: flex
+            </SelectItem>
+            {displayFlex.map((member) => (
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
+            ))}
+            <SelectItem value="GitGud" disabled>
+              Git Gud
+            </SelectItem>
+            {gitGud.map((member) => (
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
+            ))}
+            <SelectItem value="IT" disabled>
+              IT
+            </SelectItem>
+            {IT.map((member) => (
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
+            ))}
+            <SelectItem value="Bots" disabled>
+              Bots
+            </SelectItem>
+            {bots.map((member) => (
+              <SelectItem key={member} value={member}>
+                {member}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
           value={selectedFilter}
-          // @ts-ignore
           onValueChange={(value) => setSelectedFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
@@ -73,10 +134,21 @@ const RepositoryActions = ({ repoName }: Props) => {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {data?.workflow_runs.map((action) => (
-            <ActionCard key={action.id} action={action} />
-          ))}
+        <div>
+          {filteredRuns?.length === 0 ? (
+            <div className="flex items-center justify-center gap-4 py-8 text-xl">
+              <span>
+                There are no &lsquo;{selectedFilter}&rsquo; actions by{' '}
+                {authorName}
+              </span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {filteredRuns?.map((action) => (
+                <ActionCard key={action.id} action={action} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

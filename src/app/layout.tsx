@@ -1,7 +1,6 @@
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GeistSans } from 'geist/font/sans'
-import UmamiProvider from 'next-umami'
 import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 
@@ -27,10 +26,12 @@ export default function RootLayout({
       style={{ colorScheme: 'dark' }}
     >
       <head>
-        <UmamiProvider
-          websiteId="6be235d7-4857-47f6-abfd-af753353d33a"
+        <script
+          async
+          defer
           src="https://umami.zu.ca/script.js"
-        />
+          data-website-id="6be235d7-4857-47f6-abfd-af753353d33a"
+        ></script>
       </head>
       <body className="overscroll-y-none bg-background text-foreground">
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
