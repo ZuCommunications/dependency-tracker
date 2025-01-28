@@ -13,6 +13,7 @@ function getActualTechAndVersion(
   let actualVersion = version
 
   if (tech === 'nodejs') {
+    actualVersion = version.replace(/^v/i, '')
     const ltsMap: Record<string, string> = {
       'lts/jod': '22',
       'lts/iron': '20',
@@ -22,7 +23,7 @@ function getActualTechAndVersion(
       'lts/erbium': '12',
       'lts/dubnium': '10',
     }
-    actualVersion = ltsMap[version.toLowerCase()] || version
+    actualVersion = ltsMap[actualVersion.toLowerCase()] || actualVersion
   } else if (tech === 'db') {
     actualTech = version.toLowerCase().includes('mariadb') ? 'mariadb' : 'mysql'
   } else if (tech === 'os') {
