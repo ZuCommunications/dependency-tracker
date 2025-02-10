@@ -20,7 +20,7 @@ export default function VersionsPage() {
             Looking for a specific package? Try{' '}
             <Link
               href="/dependencies"
-              className="font-medium underline underline-offset-4 hover:text-primary"
+              className="hover:text-primary font-medium underline underline-offset-4"
             >
               dependency graph search
             </Link>{' '}
