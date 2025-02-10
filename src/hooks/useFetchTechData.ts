@@ -11,10 +11,7 @@ export async function fetchTechData(tech: string): Promise<TechData[]> {
     const { data } = await axios.get<TechData[]>(url)
     return data
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return []
-    }
-    throw new Error('Failed to fetch tech data')
+    return []
   }
 }
 
