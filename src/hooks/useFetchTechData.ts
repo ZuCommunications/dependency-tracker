@@ -10,14 +10,12 @@ export async function fetchTechData(tech: string): Promise<TechData[]> {
   try {
     const { data } = await axios.get<TechData[]>(url)
     return data
-  } catch (error) {
+  } catch {
     return []
   }
 }
 
-const useFetchTechData = (
-  tech: string,
-): UseSuspenseQueryResult<TechData[], Error> =>
+const useFetchTechData = (tech: string): UseSuspenseQueryResult<TechData[]> =>
   useSuspenseQuery({
     queryKey: ['techData', tech],
     queryFn: () => fetchTechData(tech),

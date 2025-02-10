@@ -57,7 +57,7 @@ export async function fetchVersionData(
     try {
       const { data } = await axios.get<VersionData>(url)
       return data
-    } catch (error) {
+    } catch {
       return null
     }
   }
@@ -80,7 +80,7 @@ export async function fetchVersionData(
 const useFetchVersionData = (
   tech: string,
   version: string,
-): UseSuspenseQueryResult<VersionData, Error> =>
+): UseSuspenseQueryResult<VersionData> =>
   useSuspenseQuery({
     queryKey: ['versionData', tech, version],
     queryFn: () => fetchVersionData(tech, version),
