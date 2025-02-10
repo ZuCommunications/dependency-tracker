@@ -1,4 +1,4 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { UseSuspenseQueryResult, useSuspenseQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
 interface TechData {
@@ -15,11 +15,12 @@ export async function fetchTechData(tech: string): Promise<TechData[]> {
   }
 }
 
-const useFetchTechData = (tech: string): UseQueryResult<TechData[], Error> =>
-  useQuery({
+const useFetchTechData = (
+  tech: string,
+): UseSuspenseQueryResult<TechData[], Error> =>
+  useSuspenseQuery({
     queryKey: ['techData', tech],
     queryFn: () => fetchTechData(tech),
-    enabled: !!tech && tech !== 'db',
     staleTime: 1000 * 60 * 60 * 24, // 1 day
     refetchInterval: 1000 * 60 * 60 * 24, // 1 day
     retry: 1,
