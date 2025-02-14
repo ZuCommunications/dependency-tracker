@@ -62,7 +62,7 @@ export default function DependencySearch() {
             {projects.map((project) => (
               <Card
                 key={project.id}
-                className="relative transition-colors hover:bg-muted/50"
+                className="hover:bg-muted/50 relative transition-colors"
               >
                 <CardHeader>
                   <CardTitle>{project.name}</CardTitle>
@@ -72,7 +72,7 @@ export default function DependencySearch() {
                     href={`https://github.com/${project.full_name}/network/dependencies?q=${searchTerm}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
+                    className="text-muted-foreground hover:text-primary flex items-center gap-2 text-sm"
                   >
                     View search result on GitHub
                     <ExternalLink className="size-4" />

@@ -60,7 +60,7 @@ export function CalendarView({ events }: CalendarViewProps) {
                 eventsInSelectedMonth.map((event, index) => (
                   <div key={index} className="rounded-lg border p-4">
                     <h3 className="font-medium">{event.summary}</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {format(event.start, 'PPP')}
                     </p>
                     {event.description && (
@@ -68,7 +68,7 @@ export function CalendarView({ events }: CalendarViewProps) {
                     )}
                     {event.affectedProjects.length > 0 && (
                       <div className="mt-3">
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-muted-foreground text-sm font-medium">
                           Affected Projects:
                         </p>
                         <div className="mt-1 flex flex-wrap gap-2">
@@ -91,7 +91,7 @@ export function CalendarView({ events }: CalendarViewProps) {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   No lifecycle events this month
                 </p>
               )}
@@ -109,7 +109,7 @@ export function CalendarView({ events }: CalendarViewProps) {
             {events.map((event, index) => (
               <div key={index} className="rounded-lg border p-4">
                 <h3 className="font-medium">{event.summary}</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {format(event.start, 'PPP')}
                 </p>
                 {event.description && (
@@ -117,7 +117,7 @@ export function CalendarView({ events }: CalendarViewProps) {
                 )}
                 {event.affectedProjects.length > 0 && (
                   <div className="mt-3">
-                    <p className="text-sm font-medium text-muted-foreground">
+                    <p className="text-muted-foreground text-sm font-medium">
                       Affected Projects:
                     </p>
                     <div className="mt-1 flex flex-wrap gap-2">

@@ -25,7 +25,7 @@ export function InfoTooltip({ children, ...props }: InfoTooltipProps) {
       <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger className="flex items-center">
-            <Info className="hidden h-3 w-3 text-muted-foreground sm:block" />
+            <Info className="text-muted-foreground hidden h-3 w-3 sm:block" />
           </TooltipTrigger>
           <TooltipContent className="max-h-64 w-64 overflow-y-auto p-0">
             <InfoContent {...props} />
@@ -34,7 +34,7 @@ export function InfoTooltip({ children, ...props }: InfoTooltipProps) {
       </TooltipProvider>
       <Popover>
         <PopoverTrigger className="flex items-center">
-          <Info className="h-3 w-3 text-muted-foreground sm:hidden" />
+          <Info className="text-muted-foreground h-3 w-3 sm:hidden" />
         </PopoverTrigger>
         <PopoverContent className="max-h-64 w-64 overflow-y-auto p-0">
           <InfoContent {...props} />

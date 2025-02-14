@@ -28,7 +28,7 @@ export default async function VersionsPage(props: {
   return (
     <div className="container mx-auto p-6">
       <div className="relative mb-4">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2">
+        <div className="absolute top-1/2 left-0 -translate-y-1/2">
           <Link href={`/versions`}>
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />

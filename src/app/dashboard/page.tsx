@@ -47,7 +47,7 @@ export default async function DashboardPage() {
             <CardContent className="prose max-w-none">
               <h1>{projectCount}</h1>
             </CardContent>
-            <ExternalLink className="absolute right-4 top-4 size-4 text-muted-foreground" />
+            <ExternalLink className="text-muted-foreground absolute top-4 right-4 size-4" />
           </Card>
         </Link>
         <Link href="/versions" className="block">
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
             <CardContent className="prose max-w-none">
               <h1>{uniqueToolsCount}</h1>
             </CardContent>
-            <ExternalLink className="absolute right-4 top-4 size-4 text-muted-foreground" />
+            <ExternalLink className="text-muted-foreground absolute top-4 right-4 size-4" />
           </Card>
         </Link>
       </div>

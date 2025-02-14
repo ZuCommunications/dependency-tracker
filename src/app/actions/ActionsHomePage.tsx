@@ -17,10 +17,10 @@ export default function ActionsHomePage({ projects }: ProjectListProps) {
             <Card className="relative h-full">
               <CardHeader>
                 <CardTitle>
-                  <span className="break-words text-2xl font-bold">{repo}</span>
+                  <span className="text-2xl font-bold break-words">{repo}</span>
                 </CardTitle>
               </CardHeader>
-              <ExternalLink className="absolute right-4 top-4 size-4 text-muted-foreground" />
+              <ExternalLink className="text-muted-foreground absolute top-4 right-4 size-4" />
             </Card>
           </Link>
         ))}
