@@ -38,7 +38,7 @@ async function ProjectRow({
   return (
     <TableRow>
       <Link href={`/projects/${project}/tools`}>
-        <TableCell className="underline decoration-muted-foreground underline-offset-2">
+        <TableCell className="decoration-muted-foreground underline underline-offset-2">
           {project}
         </TableCell>
       </Link>

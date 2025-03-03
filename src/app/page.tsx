@@ -19,14 +19,14 @@ import {
 import Link from 'next/link'
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="bg-background flex min-h-screen flex-col">
       <Header />
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+          <h1 className="text-foreground text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
             Dependency Tracker
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-base text-muted-foreground sm:text-lg md:mt-5 md:max-w-3xl md:text-xl">
+          <p className="text-muted-foreground mx-auto mt-3 max-w-md text-base sm:text-lg md:mt-5 md:max-w-3xl md:text-xl">
             Effortlessly track dependencies across all your projects
           </p>
         </div>
@@ -96,9 +96,9 @@ function FeatureCard({
   buttonHref,
 }: FeatureCardProps) {
   return (
-    <Card className="flex flex-col bg-card" hover={false}>
+    <Card className="bg-card flex flex-col" hover={false}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-card-foreground">
+        <CardTitle className="text-card-foreground flex items-center gap-2">
           {icon}
           <span>{title}</span>
         </CardTitle>
