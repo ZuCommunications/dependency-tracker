@@ -81,7 +81,7 @@ function AlertRow({ project }: { project: ProjectToAlert }) {
   return (
     <TableRow>
       <Link href={`/projects/${project.project}/tools`}>
-        <TableCell className="underline decoration-muted-foreground underline-offset-2">
+        <TableCell className="decoration-muted-foreground underline underline-offset-2">
           {project.project}
         </TableCell>
       </Link>

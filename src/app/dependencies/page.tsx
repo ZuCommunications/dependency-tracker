@@ -10,7 +10,7 @@ export default function DependenciesPage() {
           <h1 className="text-3xl font-bold">
             Search Dependency Graph on GitHub
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Search GitHub dependency graphs across all projects to find where
             packages are used
           </p>
