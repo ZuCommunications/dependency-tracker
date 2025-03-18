@@ -36,7 +36,7 @@ export function DeploymentCell({
 }) {
   if (!deployment) {
     return (
-      <span className="text-sm text-muted-foreground" role="status">
+      <span className="text-muted-foreground text-sm" role="status">
         No deployments
       </span>
     )
@@ -64,12 +64,12 @@ export function DeploymentCell({
                   href={deployment.refUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group max-w-[140px] truncate text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  className="group text-muted-foreground hover:text-foreground max-w-[140px] truncate text-xs transition-colors"
                   aria-label={`Branch: ${branchName}`}
                 >
                   <span className="inline-flex items-center gap-1">
                     <GitBranch
-                      className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
+                      className="group-hover:text-foreground h-3 w-3 shrink-0 transition-colors"
                       aria-hidden="true"
                     />
                     <span className="truncate">{branchName}</span>
@@ -85,7 +85,7 @@ export function DeploymentCell({
 
         {deployment.release && (
           <>
-            <span aria-hidden="true" className="text-xs text-muted-foreground">
+            <span aria-hidden="true" className="text-muted-foreground text-xs">
               •
             </span>
             <div className="flex items-center gap-1.5">
@@ -96,10 +96,10 @@ export function DeploymentCell({
                       href={deployment.release.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      className="group text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-xs transition-colors"
                     >
                       <Tag
-                        className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
+                        className="group-hover:text-foreground h-3 w-3 shrink-0 transition-colors"
                         aria-hidden="true"
                       />
                       <span className="font-medium">
@@ -117,7 +117,7 @@ export function DeploymentCell({
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -125,11 +125,11 @@ export function DeploymentCell({
                 href={deployment.commitUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-1 transition-colors hover:text-foreground"
+                className="group hover:text-foreground inline-flex items-center gap-1 transition-colors"
                 aria-label={`Commit: ${deployment.sha}`}
               >
                 <GitCommit
-                  className="h-3 w-3 shrink-0 transition-colors group-hover:text-foreground"
+                  className="group-hover:text-foreground h-3 w-3 shrink-0 transition-colors"
                   aria-hidden="true"
                 />
                 <span className="font-mono">{deployment.sha}</span>
@@ -148,7 +148,7 @@ export function DeploymentCell({
               href={deployment.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-foreground"
+              className="hover:text-foreground transition-colors"
               aria-label={`Deployed ${timeAgo}`}
             >
               {timeAgo}
@@ -166,7 +166,7 @@ export function DeploymentCell({
                     href={deployment.actor.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center transition-colors hover:text-foreground"
+                    className="hover:text-foreground inline-flex items-center transition-colors"
                   >
                     <img
                       src={deployment.actor.avatar_url}

@@ -33,7 +33,7 @@ export default function RootLayout({
           data-website-id="6be235d7-4857-47f6-abfd-af753353d33a"
         ></script>
       </head>
-      <body className="overscroll-y-none bg-background text-foreground">
+      <body className="bg-background text-foreground overscroll-y-none">
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
         <ReactQueryProvider>
           <main className="flex min-h-screen flex-col items-center">
