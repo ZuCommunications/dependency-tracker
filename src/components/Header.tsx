@@ -20,10 +20,10 @@ export default function Header() {
   ]
 
   return (
-    <header className="w-full border-b border-border bg-background">
+    <header className="border-border bg-background w-full border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary">
+          <Link href="/" className="text-primary text-2xl font-bold">
             Dependency Tracker
           </Link>
           <nav className="hidden sm:block">
@@ -35,7 +35,7 @@ export default function Header() {
                     href={item.href}
                     className={`transition-colors ${
                       pathname.startsWith(item.href)
-                        ? 'font-bold text-primary'
+                        ? 'text-primary font-bold'
                         : 'text-muted-foreground hover:text-primary'
                     }`}
                   >
@@ -65,7 +65,7 @@ export default function Header() {
                     href={item.href}
                     className={`block py-2 transition-colors ${
                       pathname.startsWith(item.href)
-                        ? 'font-bold text-primary'
+                        ? 'text-primary font-bold'
                         : 'text-muted-foreground hover:text-primary'
                     }`}
                     onClick={() => setIsMenuOpen(false)}

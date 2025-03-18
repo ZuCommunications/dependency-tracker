@@ -15,12 +15,12 @@ export default function VersionsPage() {
     <div className="container mx-auto space-y-6 p-4">
       <Alert>
         <AlertDescription className="flex gap-1.5">
-          <Search className="mt-0.5 size-4 flex-shrink-0" />
+          <Search className="mt-0.5 size-4 shrink-0" />
           <span>
             Looking for a specific package? Try{' '}
             <Link
               href="/dependencies"
-              className="font-medium underline underline-offset-4 hover:text-primary"
+              className="hover:text-primary font-medium underline underline-offset-4"
             >
               dependency graph search
             </Link>{' '}

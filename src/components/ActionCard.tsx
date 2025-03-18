@@ -24,7 +24,7 @@ const ActionCard = ({
       <CardHeader>
         <h1 className="text-xl font-medium">{title}</h1>
       </CardHeader>
-      <CardContent className="flex flex-grow flex-col gap-2">
+      <CardContent className="flex grow flex-col gap-2">
         <p>
           <GitBranch className="inline" /> {head_branch}
         </p>

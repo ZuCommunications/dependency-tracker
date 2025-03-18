@@ -42,18 +42,18 @@ export function D11UpgradeCustomTooltip({
       <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger className="flex items-center">
-            <Info className="hidden h-3 w-3 text-muted-foreground sm:block" />
+            <Info className="text-muted-foreground hidden h-3 w-3 sm:block" />
           </TooltipTrigger>
-          <TooltipContent className="w-100 max-h-64 overflow-y-auto p-0">
+          <TooltipContent className="max-h-64 w-100 overflow-y-auto p-0">
             <Content data={processedData} />
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <Popover>
         <PopoverTrigger className="flex items-center">
-          <Info className="h-3 w-3 text-muted-foreground sm:hidden" />
+          <Info className="text-muted-foreground h-3 w-3 sm:hidden" />
         </PopoverTrigger>
-        <PopoverContent className="w-100 max-h-64 overflow-y-auto p-0">
+        <PopoverContent className="max-h-64 w-100 overflow-y-auto p-0">
           <Content data={processedData} />
         </PopoverContent>
       </Popover>

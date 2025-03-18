@@ -54,7 +54,7 @@ export function ProjectToolsTable({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="sticky top-0 z-10 bg-background p-2">
+      <div className="bg-background sticky top-0 z-10 p-2">
         <Input
           placeholder="Search tools..."
           value={searchTerm}
@@ -62,7 +62,7 @@ export function ProjectToolsTable({
           className="mb-4"
         />
       </div>
-      <div className="flex-grow overflow-auto">
+      <div className="grow overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>

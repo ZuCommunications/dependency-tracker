@@ -29,18 +29,18 @@ export function Drupal11ReadinessTooltip({
       <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger className="flex items-center">
-            <Info className="hidden h-3 w-3 text-muted-foreground sm:block" />
+            <Info className="text-muted-foreground hidden h-3 w-3 sm:block" />
           </TooltipTrigger>
-          <TooltipContent className="w-100 max-h-64 overflow-y-auto p-0">
+          <TooltipContent className="max-h-64 w-100 overflow-y-auto p-0">
             <Content data={processedData} />
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <Popover>
         <PopoverTrigger className="flex items-center">
-          <Info className="h-3 w-3 text-muted-foreground sm:hidden" />
+          <Info className="text-muted-foreground h-3 w-3 sm:hidden" />
         </PopoverTrigger>
-        <PopoverContent className="w-100 max-h-64 overflow-y-auto p-0">
+        <PopoverContent className="max-h-64 w-100 overflow-y-auto p-0">
           <Content data={processedData} />
         </PopoverContent>
       </Popover>
@@ -113,10 +113,10 @@ function renderObject(data: Record<string, any>) {
     <div className="space-y-2">
       {Object.entries(data).map(([key, value]) => (
         <div key={key} className="flex items-start justify-between space-x-2">
-          <span className="flex-shrink-0 text-sm font-medium text-gray-600">
+          <span className="shrink-0 text-sm font-medium text-gray-600">
             {formatKey(key)}:
           </span>
-          <span className="flex-grow break-words text-sm text-gray-800">
+          <span className="grow text-sm break-words text-gray-800">
             {formatValue(value)}
           </span>
         </div>

@@ -9,7 +9,7 @@ export default function ProjectsLayout({
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <main className="flex-grow">
+      <main className="grow">
         <Suspense>{children}</Suspense>
       </main>
     </div>
