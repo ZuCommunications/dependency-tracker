@@ -76,7 +76,10 @@ export function DeploymentCell({
                   </span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="top">
+              <TooltipContent
+                side="top"
+                className="bg-popover text-popover-foreground border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 rounded-md border px-3 py-1.5 text-sm shadow-md"
+              >
                 <p>Branch: {deployment.ref}</p>
               </TooltipContent>
             </Tooltip>
@@ -107,7 +110,10 @@ export function DeploymentCell({
                       </span>
                     </Link>
                   </TooltipTrigger>
-                  <TooltipContent side="top">
+                  <TooltipContent
+                    side="top"
+                    className="bg-popover text-popover-foreground border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 rounded-md border px-3 py-1.5 text-sm shadow-md"
+                  >
                     <p>Release: {deployment.release.name}</p>
                   </TooltipContent>
                 </Tooltip>
@@ -135,7 +141,10 @@ export function DeploymentCell({
                 <span className="font-mono">{deployment.sha}</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="top">
+            <TooltipContent
+              side="top"
+              className="bg-popover text-popover-foreground border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 rounded-md border px-3 py-1.5 text-sm shadow-md"
+            >
               <p>Commit: {deployment.sha}</p>
             </TooltipContent>
           </Tooltip>
@@ -179,7 +188,10 @@ export function DeploymentCell({
                     </span>
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent side="top">
+                <TooltipContent
+                  side="top"
+                  className="bg-popover text-popover-foreground border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 rounded-md border px-3 py-1.5 text-sm shadow-md"
+                >
                   <p>Deployed by {deployment.actor.login}</p>
                 </TooltipContent>
               </Tooltip>
