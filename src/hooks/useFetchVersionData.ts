@@ -1,4 +1,4 @@
-import { UseSuspenseQueryResult, useSuspenseQuery } from '@tanstack/react-query'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
 interface VersionData {
@@ -45,9 +45,7 @@ function getActualTechAndVersion(
 export async function fetchVersionData(
   tech: string,
   version: string,
-): Promise<VersionData | null> {
-  if (!tech || !version) return null
-
+): Promise<VersionData> {
   const { actualTech, actualVersion } = getActualTechAndVersion(tech, version)
 
   async function fetchDataForSpecificVersion(
@@ -57,7 +55,8 @@ export async function fetchVersionData(
     try {
       const { data } = await axios.get<VersionData>(url)
       return data
-    } catch {
+    } catch (error) {
+      console.error(error)
       return null
     }
   }
@@ -80,10 +79,11 @@ export async function fetchVersionData(
 const useFetchVersionData = (
   tech: string,
   version: string,
-): UseSuspenseQueryResult<VersionData> =>
-  useSuspenseQuery({
+): UseQueryResult<VersionData> =>
+  useQuery({
     queryKey: ['versionData', tech, version],
     queryFn: () => fetchVersionData(tech, version),
+    enabled: !!tech && !!version,
     staleTime: 1000 * 60 * 60 * 24, // 1 day
     refetchInterval: 1000 * 60 * 60 * 24, // 1 day
     retry: 1,
