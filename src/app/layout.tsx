@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GeistSans } from 'geist/font/sans'
 import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -35,12 +36,14 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-foreground overscroll-y-none">
         <NextTopLoader showSpinner={false} height={2} color="#2acf80" />
-        <ReactQueryProvider>
-          <main className="flex min-h-screen flex-col items-center">
-            {children}
-          </main>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </ReactQueryProvider>
+        <NuqsAdapter>
+          <ReactQueryProvider>
+            <main className="flex min-h-screen flex-col items-center">
+              {children}
+            </main>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ReactQueryProvider>
+        </NuqsAdapter>
       </body>
     </html>
   )
